@@ -8,6 +8,7 @@ from geoip import geolite2
 import json
 import os.path
 import re
+import sys
 
 users_f={}
 users_p={}
@@ -72,7 +73,9 @@ def parse_ssh_entry(line,year):
 			analysis(date,user,ip,passed)
 
 try:
-	file_name='auth.log'
+	file_name='/var/log/auth.log'
+	if len(sys.argv)>1)
+		file_name=sys.argv[1]
 	file_year=datetime.datetime.fromtimestamp(os.path.getmtime(file_name)).year
 	file=open(file_name,'r')
 	for line in file:
