@@ -5,6 +5,7 @@
 
 import datetime
 from geoip import geolite2
+import json
 import os.path
 import re
 
@@ -87,7 +88,17 @@ try:
 					times=int(re.search(r'\d+',line[repeat_ind:-1]).group())
 					line=line[0:repeat_ind]+line[repeat_bkt+2:-1]
 			parse_ssh_entry(line,file_year)
-	print(gps_f)
+	json=json.dumps({
+		'users_f':users_f,
+		'users_p':users_p,
+		'ip_f':ip_f,
+		'ip_p':ip_p,
+		'country_f':country_f,
+		'country_p':country_p,
+		'gps_f':gps_f,
+		'gps_p':gps_p})
+	json_str=''.join(json.split())
+	print(json_str)
 	exit(0)
 except Exception as error:
 	print(error)
