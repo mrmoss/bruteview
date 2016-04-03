@@ -74,7 +74,7 @@ def parse_ssh_entry(line,year):
 
 try:
 	file_name='/var/log/auth.log'
-	if len(sys.argv)>1):
+	if len(sys.argv)>1:
 		file_name=sys.argv[1]
 	file_year=datetime.datetime.fromtimestamp(os.path.getmtime(file_name)).year
 	file=open(file_name,'r')
