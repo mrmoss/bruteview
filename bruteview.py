@@ -73,35 +73,34 @@ def parse_ssh_entry(line,year):
 			analysis(date,user,ip,passed)
 
 try:
-	file_name='/var/log/auth.log'
-	if len(sys.argv)>1:
-		file_name=sys.argv[1]
-	file_year=datetime.datetime.fromtimestamp(os.path.getmtime(file_name)).year
-	file=open(file_name,'r')
-	for line in file:
-		line=line.strip()
-		line=line.replace('invalid user ','')
-		if 'ssh' in line:
-			times=1
-			repeat_str='message repeated '
-			repeat_ind=line.find(repeat_str)
-			if repeat_ind>=0:
-				repeat_bkt=line.find('[',repeat_ind)
-				if repeat_bkt>=0 and repeat_ind<repeat_bkt:
-					times=int(re.search(r'\d+',line[repeat_ind:-1]).group())
-					line=line[0:repeat_ind]+line[repeat_bkt+2:-1]
-			parse_ssh_entry(line,file_year)
-	json=json.dumps({
-		'users_f':users_f,
-		'users_p':users_p,
-		'ip_f':ip_f,
-		'ip_p':ip_p,
-		'country_f':country_f,
-		'country_p':country_p,
-		'gps_f':gps_f,
-		'gps_p':gps_p})
-	json_str=''.join(json.split())
-	print(json_str)
+	for ii in range(1,len(sys.argv)):
+		file_name=sys.argv[ii]
+		file_year=datetime.datetime.fromtimestamp(os.path.getmtime(file_name)).year
+		file=open(file_name,'r')
+		for line in file:
+			line=line.strip()
+			line=line.replace('invalid user ','')
+			if 'ssh' in line:
+				times=1
+				repeat_str='message repeated '
+				repeat_ind=line.find(repeat_str)
+				if repeat_ind>=0:
+					repeat_bkt=line.find('[',repeat_ind)
+					if repeat_bkt>=0 and repeat_ind<repeat_bkt:
+						times=int(re.search(r'\d+',line[repeat_ind:-1]).group())
+						line=line[0:repeat_ind]+line[repeat_bkt+2:-1]
+				parse_ssh_entry(line,file_year)
+		json=json.dumps({
+			'users_f':users_f,
+			'users_p':users_p,
+			'ip_f':ip_f,
+			'ip_p':ip_p,
+			'country_f':country_f,
+			'country_p':country_p,
+			'gps_f':gps_f,
+			'gps_p':gps_p})
+		json_str=''.join(json.split())
+		print(json_str)
 	exit(0)
 except Exception as error:
 	print(error)
