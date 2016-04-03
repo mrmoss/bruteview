@@ -17,12 +17,16 @@
 			<br>
 			<div id='div3'></div>
 			<br>
+			<h1>Users</h1>
+			<br>
+			<div id='div4'></div>
+			<br>
 		</center>
 		<script type="text/javascript" src="loader.js"></script>
 		<script type="text/javascript" src="jsapi.js"></script>
 		<script>
 			var global_json=null;
-			google.charts.load('current',{'packages':['corechart','geochart']});
+			google.charts.load('current',{'packages':['bar','corechart','geochart']});
 			google.charts.setOnLoadCallback(dl_charts);
 
 			function dl_charts()
@@ -49,6 +53,22 @@
 				draw_country(document.getElementById('div1'),json);
 				draw_ip_top5(document.getElementById('div2'),json);
 				draw_country_top5(document.getElementById('div3'),json);
+				draw_users(document.getElementById('div4'),json);
+			}
+
+			function draw_bar_chart(div,dataset)
+			{
+				div.style.marginTop="-100px";
+				div.style.marginBottom="-75px";
+				var data=google.visualization.arrayToDataTable(dataset);
+				var options=
+				{
+					backgroundColor:{fill:'transparent'},
+					height:400,
+					colors:['#ff0000']
+				};
+				var chart=new google.visualization.BarChart(div);
+				chart.draw(data,options);
 			}
 
 			function draw_geo_chart(div,dataset)
@@ -124,6 +144,16 @@
 				dataset.length=5;
 				dataset.splice(0,0,['Country','Incidents']);
 				draw_pie_chart(div,dataset);
+			}
+			function draw_users(div,json)
+			{
+				var dataset=[];
+				for(var key in json['users_f'])
+					dataset.push([key,json['users_f'][key]]);
+				dataset.sort(function(a,b){return b[1]-a[1]});
+				dataset.length=5;
+				dataset.splice(0,0,['User','Tries']);
+				draw_bar_chart(div,dataset);
 			}
 		</script>
 	</head>
