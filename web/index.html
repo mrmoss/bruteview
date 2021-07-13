@@ -25,13 +25,13 @@
 		<script type="text/javascript" src="loader.js"></script>
 		<script type="text/javascript" src="jsapi.js"></script>
 		<script>
-			var global_json=null;
+			let global_json=null;
 			google.charts.load('current',{'packages':['bar','corechart','geochart']});
 			google.charts.setOnLoadCallback(dl_charts);
 
 			function dl_charts()
 			{
-				var xmlhttp=new XMLHttpRequest();
+				let xmlhttp=new XMLHttpRequest();
 				xmlhttp.overrideMimeType("application/json");
 				xmlhttp.open('GET','auth.json?'+(new Date()).getMilliseconds(),true);
 				xmlhttp.onreadystatechange=function()
@@ -60,8 +60,8 @@
 			{
 				div.style.marginTop="-100px";
 				div.style.marginBottom="-75px";
-				var data=google.visualization.arrayToDataTable(dataset);
-				var options=
+				let data=google.visualization.arrayToDataTable(dataset);
+				let options=
 				{
 					backgroundColor:{fill:'transparent'},
 					width:800,
@@ -69,20 +69,20 @@
 					colors:['#ff0000'],
 					legend:'none'
 				};
-				var chart=new google.visualization.BarChart(div);
+				let chart=new google.visualization.BarChart(div);
 				chart.draw(data,options);
 			}
 
 			function draw_geo_chart(div,dataset)
 			{
-				var data=google.visualization.arrayToDataTable(dataset);
-				var options=
+				let data=google.visualization.arrayToDataTable(dataset);
+				let options=
 				{
 					backgroundColor:{fill:'transparent'},
 					width:1000,
 					colorAxis:{colors:['#ffcccc','#ff0000']}
 				};
-				var chart=new google.visualization.GeoChart(div);
+				let chart=new google.visualization.GeoChart(div);
 				chart.draw(data,options);
 			}
 
@@ -90,26 +90,27 @@
 			{
 				div.style.marginTop="-100px";
 				div.style.marginBottom="-75px";
-				var data=google.visualization.arrayToDataTable(dataset);
-				var options=
+				console.log(JSON.stringify(dataset));
+				let data=google.visualization.arrayToDataTable(dataset);
+				let options=
 				{
 					backgroundColor:{fill:'transparent'},
 					height:400,
 					pieHole:0.4,
 					colors:['#ff0000','#ff3333','#ff6666','#ff9999','#ffcccc']
 				};
-				var chart=new google.visualization.PieChart(div);
+				let chart=new google.visualization.PieChart(div);
 				chart.draw(data,options);
 			}
 
 			function draw_gps(div,json)
 			{
-				var dataset=[['Latitude','Longitude','Incidents']];
-				for(var key in json['gps_f'])
+				let dataset=[['Latitude','Longitude','Incidents']];
+				for(let key in json['gps_f'])
 					if(key!='unknown')
 					{
-						var coord=JSON.parse('['+key+']');
-						var entry=[coord[0],coord[1],json['gps_f'][key]];
+						let coord=JSON.parse('['+key+']');
+						let entry=[coord[0],coord[1],json['gps_f'][key]];
 						dataset.push(entry);
 					}
 				draw_geo_chart(div,dataset);
@@ -117,8 +118,8 @@
 
 			function draw_country(div,json)
 			{
-				var dataset=[['Country','Incidents']];
-				for(var key in json['country_f'])
+				let dataset=[['Country','Incidents']];
+				for(let key in json['country_f'])
 					if(key!='unknown')
 						dataset.push([key,json['country_f'][key]]);
 				draw_geo_chart(div,dataset);
@@ -126,33 +127,33 @@
 
 			function draw_ip_top5(div,json)
 			{
-				var dataset=[];
-				for(var key in json['ip_f'])
+				let dataset=[];
+				for(let key in json['ip_f'])
 					dataset.push([key,json['ip_f'][key]]);
 				dataset.sort(function(a,b){return b[1]-a[1]});
-				dataset.length=5;
+				dataset.length=Math.min(dataset.length, 5);
 				dataset.splice(0,0,['IP','Incidents']);
 				draw_pie_chart(div,dataset);
 			}
 
 			function draw_country_top5(div,json)
 			{
-				var dataset=[];
-				for(var key in json['country_f'])
+				let dataset=[];
+				for(let key in json['country_f'])
 					if(key!='unknown')
 						dataset.push([key,json['country_f'][key]]);
 				dataset.sort(function(a,b){return b[1]-a[1]});
-				dataset.length=5;
+				dataset.length=Math.min(dataset.length, 5);
 				dataset.splice(0,0,['Country','Incidents']);
 				draw_pie_chart(div,dataset);
 			}
 			function draw_users(div,json)
 			{
-				var dataset=[];
-				for(var key in json['users_f'])
+				let dataset=[];
+				for(let key in json['users_f'])
 					dataset.push([key,json['users_f'][key]]);
 				dataset.sort(function(a,b){return b[1]-a[1]});
-				dataset.length=5;
+				dataset.length=Math.min(dataset.length, 5);
 				dataset.splice(0,0,['User','Tries']);
 				draw_bar_chart(div,dataset);
 			}
